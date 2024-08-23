@@ -7,13 +7,14 @@ local gravityButton = Instance.new("TextButton")
 local jumpButton = Instance.new("TextButton")
 local deleteButton = Instance.new("TextButton")
 local banButton = Instance.new("TextButton")
+local playerNameTextBox = Instance.new("TextBox")
 
 menu.Name = "Menu"
 menu.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui")
 
 frame.Name = "Frame"
 frame.Parent = menu
-frame.Size = UDim2.new(0, 200, 0, 200)
+frame.Size = UDim2.new(0, 200, 0, 250)
 frame.Position = UDim2.new(0, 10, 0, 10)
 frame.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
 frame.BorderSizePixel = 0
@@ -31,7 +32,8 @@ gravityButton.MouseButton1Click:Connect(function()
         local humanoid = character:FindFirstChildOfClass("Humanoid")
         if humanoid then
             humanoid.PlatformStand = true
-            character.HumanoidRootPart.Anchored = true
+            character.HumanoidRootPart.Anchored = false
+            character.HumanoidRootPart.CanCollide = false
         end
     end
 end)
@@ -72,7 +74,6 @@ deleteButton.MouseButton1Click:Connect(function()
     handle.Parent = deleteTool
 
     deleteTool.Activated:Connect(function()
-        local character = game.Players.LocalPlayer.Character
         local mouse = game.Players.LocalPlayer:GetMouse()
         local target = mouse.Target
         if target and target:IsA("BasePart") then
@@ -81,15 +82,23 @@ deleteButton.MouseButton1Click:Connect(function()
     end)
 end)
 
+playerNameTextBox.Name = "PlayerNameTextBox"
+playerNameTextBox.Parent = frame
+playerNameTextBox.Size = UDim2.new(1, 0, 0, 40)
+playerNameTextBox.Position = UDim2.new(0, 0, 0, 120)
+playerNameTextBox.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
+playerNameTextBox.TextColor3 = Color3.fromRGB(255, 255, 255)
+playerNameTextBox.PlaceholderText = "Nome do jogador"
+
 banButton.Name = "BanButton"
 banButton.Parent = frame
 banButton.Size = UDim2.new(1, 0, 0, 40)
-banButton.Position = UDim2.new(0, 0, 0, 120)
+banButton.Position = UDim2.new(0, 0, 0, 160)
 banButton.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
 banButton.TextColor3 = Color3.fromRGB(255, 255, 255)
 banButton.Text = "Banir Jogador"
 banButton.MouseButton1Click:Connect(function()
-    local playerName = game.Players.LocalPlayer.PlayerGui:WaitForChild("Menu"):WaitForChild("Frame"):WaitForChild("PlayerNameTextBox").Text
+    local playerName = playerNameTextBox.Text
     local playerToBan = game.Players:FindFirstChild(playerName)
     if playerToBan then
         playerToBan:Kick("Você foi banido do servidor.")
@@ -111,8 +120,8 @@ banHandle.Parent = banTool
 
 banTool.Activated:Connect(function()
     local mouse = game.Players.LocalPlayer:GetMouse()
-    local targetPlayer = mouse.Target
-    if targetPlayer and targetPlayer:IsA("Player") then
-        targetPlayer:Kick("Você foi banido do servidor.")
+    local target = mouse.Target
+    if target and target:IsA("Player") then
+        target:Kick("Você foi banido do servidor.")
     end
 end)
