@@ -1,9 +1,7 @@
-local flying = false
-local speed = 50
 local player = game.Players.LocalPlayer
-local mouse = player:GetMouse()
 local character = player.Character or player.CharacterAdded:Wait()
 local humanoidRootPart = character:WaitForChild("HumanoidRootPart")
+local flying = false
 local bodyGyro = Instance.new("BodyGyro")
 local bodyVelocity = Instance.new("BodyVelocity")
 
@@ -18,12 +16,12 @@ local function startFlying()
 
     while flying do
         local direction = Vector3.new(0, 0, 0)
-        if mouse.KeyDown:FindFirstChild("w") then direction = direction + (workspace.CurrentCamera.CFrame.LookVector * speed) end
-        if mouse.KeyDown:FindFirstChild("s") then direction = direction - (workspace.CurrentCamera.CFrame.LookVector * speed) end
-        if mouse.KeyDown:FindFirstChild("a") then direction = direction - (workspace.CurrentCamera.CFrame.RightVector * speed) end
-        if mouse.KeyDown:FindFirstChild("d") then direction = direction + (workspace.CurrentCamera.CFrame.RightVector * speed) end
-        if mouse.KeyDown:FindFirstChild("space") then direction = direction + (workspace.CurrentCamera.CFrame.UpVector * speed) end
-        if mouse.KeyDown:FindFirstChild("LeftControl") then direction = direction - (workspace.CurrentCamera.CFrame.UpVector * speed) end
+        if player:GetMouse().KeyDown:FindFirstChild("w") then direction = direction + (workspace.CurrentCamera.CFrame.LookVector * 50) end
+        if player:GetMouse().KeyDown:FindFirstChild("s") then direction = direction - (workspace.CurrentCamera.CFrame.LookVector * 50) end
+        if player:GetMouse().KeyDown:FindFirstChild("a") then direction = direction - (workspace.CurrentCamera.CFrame.RightVector * 50) end
+        if player:GetMouse().KeyDown:FindFirstChild("d") then direction = direction + (workspace.CurrentCamera.CFrame.RightVector * 50) end
+        if player:GetMouse().KeyDown:FindFirstChild("space") then direction = direction + (workspace.CurrentCamera.CFrame.UpVector * 50) end
+        if player:GetMouse().KeyDown:FindFirstChild("LeftControl") then direction = direction - (workspace.CurrentCamera.CFrame.UpVector * 50) end
         bodyGyro.CFrame = workspace.CurrentCamera.CFrame
         bodyVelocity.Velocity = direction
         game:GetService("RunService").Heartbeat:Wait()
@@ -36,26 +34,16 @@ local function stopFlying()
     bodyVelocity:Destroy()
 end
 
-local function setupMenu()
-    local screenGui = Instance.new("ScreenGui")
-    screenGui.Name = "FlyMenu"
-    screenGui.Parent = player:WaitForChild("PlayerGui")
-
-    local flyButton = Instance.new("TextButton")
-    flyButton.Size = UDim2.new(0, 200, 0, 50)
-    flyButton.Position = UDim2.new(0, 10, 0, 10)
-    flyButton.Text = "Ativar Voo"
-    flyButton.Parent = screenGui
-
-    flyButton.MouseButton1Click:Connect(function()
+local function onChatMessage(message)
+    if message:lower() == "/fly" then
         if not flying then
             startFlying()
-            flyButton.Text = "Desativar Voo"
+            player:Chat("Voo ativado!")
         else
             stopFlying()
-            flyButton.Text = "Ativar Voo"
+            player:Chat("Voo desativado!")
         end
-    end)
+    end
 end
 
-setupMenu()
+game.Players.LocalPlayer.Chatted:Connect(onChatMessage)
