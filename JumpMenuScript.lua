@@ -1,7 +1,7 @@
 local player = game.Players.LocalPlayer
 local character = player.Character or player.CharacterAdded:Wait()
 local humanoid = character:WaitForChild("Humanoid")
-local jumpPower = 125  -- Poder de pulo ajustado para 125
+local jumpPower = 240  -- Poder de pulo ajustado para 125
 local originalJumpPower = humanoid.JumpPower
 local isBoosted = false
 
