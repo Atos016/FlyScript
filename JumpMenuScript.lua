@@ -8,7 +8,6 @@ local isBoosted = false
 local isGravityZero = false
 local moveSpeed = 50  -- Velocidade de movimento para gravidade 0
 
--- Criar GUI principal
 local screenGui = Instance.new("ScreenGui")
 screenGui.Parent = player:WaitForChild("PlayerGui")
 
@@ -82,7 +81,6 @@ gravityButton.Font = Enum.Font.SourceSansBold
 gravityButton.TextScaled = true
 gravityButton.Parent = contentContainer
 
--- Lógica para alternar entre boost e pulo normal
 boostButton.MouseButton1Click:Connect(function()
     if not isBoosted then
         humanoid.JumpPower = jumpPower
@@ -95,13 +93,12 @@ boostButton.MouseButton1Click:Connect(function()
     end
 end)
 
--- Lógica para alternar entre gravidade normal e 0
 gravityButton.MouseButton1Click:Connect(function()
     if not isGravityZero then
         workspace.Gravity = 0
         gravityButton.Text = "Set Gravity to 196.2"  -- Valor padrão de gravidade
         isGravityZero = true
-        -- Adicionar força personalizada para movimentação
+        
         local bodyVelocity = Instance.new("BodyVelocity")
         bodyVelocity.Velocity = Vector3.new(0, 0, 0)  -- Inicialmente sem movimento
         bodyVelocity.MaxForce = Vector3.new(4000, 4000, 4000)  -- Força máxima para mover o personagem
@@ -110,7 +107,7 @@ gravityButton.MouseButton1Click:Connect(function()
         workspace.Gravity = originalGravity
         gravityButton.Text = "Set Gravity to 0"
         isGravityZero = false
-        -- Remover força personalizada
+        
         local bodyVelocity = character:FindFirstChildOfClass("BodyVelocity")
         if bodyVelocity then
             bodyVelocity:Destroy()
@@ -118,7 +115,6 @@ gravityButton.MouseButton1Click:Connect(function()
     end
 end)
 
--- Lógica para minimizar e maximizar
 minimizeButton.MouseButton1Click:Connect(function()
     if contentContainer.Visible then
         contentContainer.Visible = false
@@ -133,7 +129,6 @@ minimizeButton.MouseButton1Click:Connect(function()
     end
 end)
 
--- Lógica para alternar abas
 tab1.MouseButton1Click:Connect(function()
     contentContainer.Visible = true
     boostButton.Visible = true
@@ -146,7 +141,6 @@ tab2.MouseButton1Click:Connect(function()
     gravityButton.Visible = true
 end)
 
--- Adicionar controle de movimento personalizado para gravidade 0
 game:GetService("RunService").RenderStepped:Connect(function()
     if isGravityZero then
         local bodyVelocity = character:FindFirstChildOfClass("BodyVelocity")
