@@ -1,59 +1,106 @@
--- Baixe e execute o script do GitHub para criar um menu visual
-loadstring(game:HttpGet("https://raw.githubusercontent.com/Atos016/FlyScript/main/FlyScript.lua", true))()
+-- Gerador de chave
+local function generateKey(length)
+    local charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
+    local key = ""
+    for i = 1, length do
+        local randomIndex = math.random(1, #charset)
+        key = key .. charset:sub(randomIndex, randomIndex)
+    end
+    return key
+end
 
--- Crie o menu principal
-local MainMenu = Instance.new("ScreenGui")
+local generatedKey = generateKey(16)
+
+local function isValidKey(inputKey)
+    return inputKey == generatedKey
+end
+
+-- Menu visual
+local Menu = Instance.new("ScreenGui")
 local MenuFrame = Instance.new("Frame")
-local FlyButton = Instance.new("TextButton")
-local WallWalkButton = Instance.new("TextButton")
-local JumpPowerButton = Instance.new("TextButton")
+local GravityButton = Instance.new("TextButton")
+local JumpButton = Instance.new("TextButton")
+local KeyButton = Instance.new("TextButton")
+local KeyFrame = Instance.new("Frame")
+local KeyInput = Instance.new("TextBox")
+local SubmitButton = Instance.new("TextButton")
 
-MainMenu.Name = "MainMenu"
-MainMenu.Parent = game.CoreGui
+Menu.Name = "Menu"
+Menu.Parent = game.CoreGui
 
 MenuFrame.Name = "MenuFrame"
-MenuFrame.Parent = MainMenu
+MenuFrame.Parent = Menu
 MenuFrame.BackgroundColor3 = Color3.new(0.3, 0.3, 0.3)
-MenuFrame.Position = UDim2.new(0.5, -100, 0.5, -100)
-MenuFrame.Size = UDim2.new(0, 200, 0, 300)
+MenuFrame.Position = UDim2.new(0.5, -150, 0.5, -100)
+MenuFrame.Size = UDim2.new(0, 300, 0, 250)
 
-FlyButton.Name = "FlyButton"
-FlyButton.Parent = MenuFrame
-FlyButton.BackgroundColor3 = Color3.new(0.2, 0.2, 0.2)
-FlyButton.Position = UDim2.new(0.1, 0, 0.1, 0)
-FlyButton.Size = UDim2.new(0.8, 0, 0.2, 0)
-FlyButton.Text = "Fly"
+GravityButton.Name = "GravityButton"
+GravityButton.Parent = MenuFrame
+GravityButton.BackgroundColor3 = Color3.new(0.2, 0.6, 0.2)
+GravityButton.Position = UDim2.new(0.1, 0, 0.2, 0)
+GravityButton.Size = UDim2.new(0.8, 0, 0.2, 0)
+GravityButton.Text = "Set Gravity to 0"
 
-WallWalkButton.Name = "WallWalkButton"
-WallWalkButton.Parent = MenuFrame
-WallWalkButton.BackgroundColor3 = Color3.new(0.2, 0.2, 0.2)
-WallWalkButton.Position = UDim2.new(0.1, 0, 0.4, 0)
-WallWalkButton.Size = UDim2.new(0.8, 0, 0.2, 0)
-WallWalkButton.Text = "Wall Walk"
+JumpButton.Name = "JumpButton"
+JumpButton.Parent = MenuFrame
+JumpButton.BackgroundColor3 = Color3.new(0.2, 0.6, 0.2)
+JumpButton.Position = UDim2.new(0.1, 0, 0.5, 0)
+JumpButton.Size = UDim2.new(0.8, 0, 0.2, 0)
+JumpButton.Text = "Set Jump Power to 125"
 
-JumpPowerButton.Name = "JumpPowerButton"
-JumpPowerButton.Parent = MenuFrame
-JumpPowerButton.BackgroundColor3 = Color3.new(0.2, 0.2, 0.2)
-JumpPowerButton.Position = UDim2.new(0.1, 0, 0.7, 0)
-JumpPowerButton.Size = UDim2.new(0.8, 0, 0.2, 0)
-JumpPowerButton.Text = "Jump Power: 125"
+KeyButton.Name = "KeyButton"
+KeyButton.Parent = MenuFrame
+KeyButton.BackgroundColor3 = Color3.new(0.6, 0.2, 0.2)
+KeyButton.Position = UDim2.new(0.1, 0, 0.8, 0)
+KeyButton.Size = UDim2.new(0.8, 0, 0.2, 0)
+KeyButton.Text = "Enter Key"
 
--- Funções para cada botão
-FlyButton.MouseButton1Click:Connect(function()
-    -- Script para ativar/desativar o voo
-    print("Toggle Fly")
+KeyFrame.Name = "KeyFrame"
+KeyFrame.Parent = Menu
+KeyFrame.BackgroundColor3 = Color3.new(0.4, 0.4, 0.4)
+KeyFrame.Position = UDim2.new(0.5, -150, 0.5, -100)
+KeyFrame.Size = UDim2.new(0, 300, 0, 150)
+KeyFrame.Visible = false
+
+KeyInput.Name = "KeyInput"
+KeyInput.Parent = KeyFrame
+KeyInput.BackgroundColor3 = Color3.new(1, 1, 1)
+KeyInput.Position = UDim2.new(0.1, 0, 0.3, 0)
+KeyInput.Size = UDim2.new(0.8, 0, 0.3, 0)
+KeyInput.PlaceholderText = "Enter Key"
+
+SubmitButton.Name = "SubmitButton"
+SubmitButton.Parent = KeyFrame
+SubmitButton.BackgroundColor3 = Color3.new(0.2, 0.6, 0.2)
+SubmitButton.Position = UDim2.new(0.1, 0, 0.7, 0)
+SubmitButton.Size = UDim2.new(0.8, 0, 0.3, 0)
+SubmitButton.Text = "Submit"
+
+GravityButton.MouseButton1Click:Connect(function()
+    if isValidKey(KeyInput.Text) then
+        game.Workspace.Gravity = 0
+    else
+        -- Mensagem de erro
+    end
 end)
 
-WallWalkButton.MouseButton1Click:Connect(function()
-    -- Script para ativar/desativar andar nas paredes
-    print("Toggle Wall Walk")
-end)
-
-JumpPowerButton.MouseButton1Click:Connect(function()
-    -- Script para ajustar o poder do pulo
-    local player = game.Players.LocalPlayer
-    if player and player.Character and player.Character:FindFirstChild("Humanoid") then
+JumpButton.MouseButton1Click:Connect(function()
+    if isValidKey(KeyInput.Text) then
+        local player = game.Players.LocalPlayer
         player.Character.Humanoid.JumpPower = 125
-        print("Jump Power set to 125")
+    else
+        -- Mensagem de erro
+    end
+end)
+
+KeyButton.MouseButton1Click:Connect(function()
+    KeyFrame.Visible = true
+end)
+
+SubmitButton.MouseButton1Click:Connect(function()
+    if isValidKey(KeyInput.Text) then
+        KeyFrame.Visible = false
+    else
+        -- Mensagem de erro
     end
 end)
