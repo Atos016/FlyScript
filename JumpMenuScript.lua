@@ -1,12 +1,12 @@
 local player = game.Players.LocalPlayer
 local character = player.Character or player.CharacterAdded:Wait()
 local humanoid = character:WaitForChild("Humanoid")
-local jumpPower = 125
+local jumpPower = 125  -- Poder de pulo ajustado para 125
 local originalJumpPower = humanoid.JumpPower
 local originalGravity = workspace.Gravity
 local isBoosted = false
 local isGravityZero = false
-local moveSpeed = 50
+local moveSpeed = 50  -- Velocidade de movimento para gravidade 0
 
 -- Criar GUI principal
 local screenGui = Instance.new("ScreenGui")
@@ -17,7 +17,7 @@ frame.Size = UDim2.new(0, 250, 0, 200)
 frame.Position = UDim2.new(0.5, -125, 0.5, -100)
 frame.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
 frame.Active = true
-frame.Draggable = true
+frame.Draggable = true -- Permite arrastar
 frame.Parent = screenGui
 
 local minimizeButton = Instance.new("TextButton")
@@ -82,26 +82,6 @@ gravityButton.Font = Enum.Font.SourceSansBold
 gravityButton.TextScaled = true
 gravityButton.Parent = contentContainer
 
-local banButton = Instance.new("TextButton")
-banButton.Size = UDim2.new(0.8, 0, 0.6, 0)
-banButton.Position = UDim2.new(0.1, 0, 0.2, 0)
-banButton.Text = "Ban Player"
-banButton.TextColor3 = Color3.fromRGB(255, 255, 255)
-banButton.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
-banButton.Font = Enum.Font.SourceSansBold
-banButton.TextScaled = true
-banButton.Parent = contentContainer
-
-local deleteButton = Instance.new("TextButton")
-deleteButton.Size = UDim2.new(0.8, 0, 0.6, 0)
-deleteButton.Position = UDim2.new(0.1, 0, 0.2, 0)
-deleteButton.Text = "Equip Delete Tool"
-deleteButton.TextColor3 = Color3.fromRGB(255, 255, 255)
-deleteButton.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
-deleteButton.Font = Enum.Font.SourceSansBold
-deleteButton.TextScaled = true
-deleteButton.Parent = contentContainer
-
 -- Lógica para alternar entre boost e pulo normal
 boostButton.MouseButton1Click:Connect(function()
     if not isBoosted then
@@ -119,12 +99,12 @@ end)
 gravityButton.MouseButton1Click:Connect(function()
     if not isGravityZero then
         workspace.Gravity = 0
-        gravityButton.Text = "Set Gravity to 196.2"
+        gravityButton.Text = "Set Gravity to 196.2"  -- Valor padrão de gravidade
         isGravityZero = true
         -- Adicionar força personalizada para movimentação
         local bodyVelocity = Instance.new("BodyVelocity")
-        bodyVelocity.Velocity = Vector3.new(0, 0, 0)
-        bodyVelocity.MaxForce = Vector3.new(4000, 4000, 4000)
+        bodyVelocity.Velocity = Vector3.new(0, 0, 0)  -- Inicialmente sem movimento
+        bodyVelocity.MaxForce = Vector3.new(4000, 4000, 4000)  -- Força máxima para mover o personagem
         bodyVelocity.Parent = character:WaitForChild("HumanoidRootPart")
     else
         workspace.Gravity = originalGravity
@@ -136,29 +116,6 @@ gravityButton.MouseButton1Click:Connect(function()
             bodyVelocity:Destroy()
         end
     end
-end)
-
--- Lógica para banir jogador
-banButton.MouseButton1Click:Connect(function()
-    local targetPlayer = game.Players:FindFirstChild("NomeDoJogador") -- Substitua "NomeDoJogador" pelo nome do jogador que deseja banir
-    if targetPlayer and targetPlayer ~= player then
-        targetPlayer:Kick("Você foi banido!")
-    end
-end)
-
--- Lógica para equipar ferramenta de deletar partes
-deleteButton.MouseButton1Click:Connect(function()
-    local tool = Instance.new("Tool")
-    tool.Name = "DeleteTool"
-    tool.RequiresHandle = false
-    tool.Parent = player.Backpack
-
-    tool.Activated:Connect(function()
-        local target = player:GetMouse().Target
-        if target and target:IsA("BasePart") then
-            target:Destroy()
-        end
-    end)
 end)
 
 -- Lógica para minimizar e maximizar
@@ -194,6 +151,7 @@ game:GetService("RunService").RenderStepped:Connect(function()
     if isGravityZero then
         local bodyVelocity = character:FindFirstChildOfClass("BodyVelocity")
         if bodyVelocity then
+            -- Movimento básico com as teclas WASD
             local moveVector = Vector3.new(
                 (game:GetService("UserInputService"):IsKeyDown(Enum.KeyCode.D) and 1 or 0) - (game:GetService("UserInputService"):IsKeyDown(Enum.KeyCode.A) and 1 or 0),
                 0,
