@@ -1,106 +1,118 @@
--- Gerador de chave
-local function generateKey(length)
-    local charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
-    local key = ""
-    for i = 1, length do
-        local randomIndex = math.random(1, #charset)
-        key = key .. charset:sub(randomIndex, randomIndex)
-    end
-    return key
-end
+-- Script combinado com funções de gravidade 0, pulo, ferramenta de deletar partes do mapa e ferramenta de banir
 
-local generatedKey = generateKey(16)
+-- Definindo o menu
+local menu = Instance.new("ScreenGui")
+local frame = Instance.new("Frame")
+local gravityButton = Instance.new("TextButton")
+local jumpButton = Instance.new("TextButton")
+local deleteButton = Instance.new("TextButton")
+local banButton = Instance.new("TextButton")
 
-local function isValidKey(inputKey)
-    return inputKey == generatedKey
-end
+menu.Name = "Menu"
+menu.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui")
 
--- Menu visual
-local Menu = Instance.new("ScreenGui")
-local MenuFrame = Instance.new("Frame")
-local GravityButton = Instance.new("TextButton")
-local JumpButton = Instance.new("TextButton")
-local KeyButton = Instance.new("TextButton")
-local KeyFrame = Instance.new("Frame")
-local KeyInput = Instance.new("TextBox")
-local SubmitButton = Instance.new("TextButton")
+frame.Name = "Frame"
+frame.Parent = menu
+frame.Size = UDim2.new(0, 200, 0, 200)
+frame.Position = UDim2.new(0, 10, 0, 10)
+frame.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+frame.BorderSizePixel = 0
 
-Menu.Name = "Menu"
-Menu.Parent = game.CoreGui
-
-MenuFrame.Name = "MenuFrame"
-MenuFrame.Parent = Menu
-MenuFrame.BackgroundColor3 = Color3.new(0.3, 0.3, 0.3)
-MenuFrame.Position = UDim2.new(0.5, -150, 0.5, -100)
-MenuFrame.Size = UDim2.new(0, 300, 0, 250)
-
-GravityButton.Name = "GravityButton"
-GravityButton.Parent = MenuFrame
-GravityButton.BackgroundColor3 = Color3.new(0.2, 0.6, 0.2)
-GravityButton.Position = UDim2.new(0.1, 0, 0.2, 0)
-GravityButton.Size = UDim2.new(0.8, 0, 0.2, 0)
-GravityButton.Text = "Set Gravity to 0"
-
-JumpButton.Name = "JumpButton"
-JumpButton.Parent = MenuFrame
-JumpButton.BackgroundColor3 = Color3.new(0.2, 0.6, 0.2)
-JumpButton.Position = UDim2.new(0.1, 0, 0.5, 0)
-JumpButton.Size = UDim2.new(0.8, 0, 0.2, 0)
-JumpButton.Text = "Set Jump Power to 125"
-
-KeyButton.Name = "KeyButton"
-KeyButton.Parent = MenuFrame
-KeyButton.BackgroundColor3 = Color3.new(0.6, 0.2, 0.2)
-KeyButton.Position = UDim2.new(0.1, 0, 0.8, 0)
-KeyButton.Size = UDim2.new(0.8, 0, 0.2, 0)
-KeyButton.Text = "Enter Key"
-
-KeyFrame.Name = "KeyFrame"
-KeyFrame.Parent = Menu
-KeyFrame.BackgroundColor3 = Color3.new(0.4, 0.4, 0.4)
-KeyFrame.Position = UDim2.new(0.5, -150, 0.5, -100)
-KeyFrame.Size = UDim2.new(0, 300, 0, 150)
-KeyFrame.Visible = false
-
-KeyInput.Name = "KeyInput"
-KeyInput.Parent = KeyFrame
-KeyInput.BackgroundColor3 = Color3.new(1, 1, 1)
-KeyInput.Position = UDim2.new(0.1, 0, 0.3, 0)
-KeyInput.Size = UDim2.new(0.8, 0, 0.3, 0)
-KeyInput.PlaceholderText = "Enter Key"
-
-SubmitButton.Name = "SubmitButton"
-SubmitButton.Parent = KeyFrame
-SubmitButton.BackgroundColor3 = Color3.new(0.2, 0.6, 0.2)
-SubmitButton.Position = UDim2.new(0.1, 0, 0.7, 0)
-SubmitButton.Size = UDim2.new(0.8, 0, 0.3, 0)
-SubmitButton.Text = "Submit"
-
-GravityButton.MouseButton1Click:Connect(function()
-    if isValidKey(KeyInput.Text) then
-        game.Workspace.Gravity = 0
-    else
-        -- Mensagem de erro
+gravityButton.Name = "GravityButton"
+gravityButton.Parent = frame
+gravityButton.Size = UDim2.new(1, 0, 0, 40)
+gravityButton.Position = UDim2.new(0, 0, 0, 0)
+gravityButton.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
+gravityButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+gravityButton.Text = "Gravidade 0"
+gravityButton.MouseButton1Click:Connect(function()
+    local character = game.Players.LocalPlayer.Character
+    if character then
+        local humanoid = character:FindFirstChildOfClass("Humanoid")
+        if humanoid then
+            humanoid.PlatformStand = true
+            character.HumanoidRootPart.Anchored = true
+        end
     end
 end)
 
-JumpButton.MouseButton1Click:Connect(function()
-    if isValidKey(KeyInput.Text) then
-        local player = game.Players.LocalPlayer
-        player.Character.Humanoid.JumpPower = 125
-    else
-        -- Mensagem de erro
+jumpButton.Name = "JumpButton"
+jumpButton.Parent = frame
+jumpButton.Size = UDim2.new(1, 0, 0, 40)
+jumpButton.Position = UDim2.new(0, 0, 0, 40)
+jumpButton.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
+jumpButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+jumpButton.Text = "Pulo 125"
+jumpButton.MouseButton1Click:Connect(function()
+    local character = game.Players.LocalPlayer.Character
+    if character then
+        local humanoid = character:FindFirstChildOfClass("Humanoid")
+        if humanoid then
+            humanoid.JumpPower = 125
+        end
     end
 end)
 
-KeyButton.MouseButton1Click:Connect(function()
-    KeyFrame.Visible = true
+deleteButton.Name = "DeleteButton"
+deleteButton.Parent = frame
+deleteButton.Size = UDim2.new(1, 0, 0, 40)
+deleteButton.Position = UDim2.new(0, 0, 0, 80)
+deleteButton.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
+deleteButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+deleteButton.Text = "Deletar Partes"
+deleteButton.MouseButton1Click:Connect(function()
+    local deleteTool = Instance.new("Tool")
+    deleteTool.Name = "DeleteTool"
+    deleteTool.RequiresHandle = true
+    deleteTool.Parent = game.Players.LocalPlayer.Backpack
+
+    local handle = Instance.new("Part")
+    handle.Name = "Handle"
+    handle.Size = Vector3.new(1, 1, 1)
+    handle.Parent = deleteTool
+
+    deleteTool.Activated:Connect(function()
+        local character = game.Players.LocalPlayer.Character
+        local mouse = game.Players.LocalPlayer:GetMouse()
+        local target = mouse.Target
+        if target and target:IsA("BasePart") then
+            target:Destroy()
+        end
+    end)
 end)
 
-SubmitButton.MouseButton1Click:Connect(function()
-    if isValidKey(KeyInput.Text) then
-        KeyFrame.Visible = false
+banButton.Name = "BanButton"
+banButton.Parent = frame
+banButton.Size = UDim2.new(1, 0, 0, 40)
+banButton.Position = UDim2.new(0, 0, 0, 120)
+banButton.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
+banButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+banButton.Text = "Banir Jogador"
+banButton.MouseButton1Click:Connect(function()
+    local playerName = game.Players.LocalPlayer.PlayerGui:WaitForChild("Menu"):WaitForChild("Frame"):WaitForChild("PlayerNameTextBox").Text
+    local playerToBan = game.Players:FindFirstChild(playerName)
+    if playerToBan then
+        playerToBan:Kick("Você foi banido do servidor.")
     else
-        -- Mensagem de erro
+        print("Jogador não encontrado.")
+    end
+end)
+
+-- Ferramenta de banir
+local banTool = Instance.new("Tool")
+banTool.Name = "BanTool"
+banTool.RequiresHandle = true
+banTool.Parent = game.Players.LocalPlayer.Backpack
+
+local banHandle = Instance.new("Part")
+banHandle.Name = "Handle"
+banHandle.Size = Vector3.new(1, 1, 1)
+banHandle.Parent = banTool
+
+banTool.Activated:Connect(function()
+    local mouse = game.Players.LocalPlayer:GetMouse()
+    local targetPlayer = mouse.Target
+    if targetPlayer and targetPlayer:IsA("Player") then
+        targetPlayer:Kick("Você foi banido do servidor.")
     end
 end)
