@@ -1,4 +1,3 @@
--- Criação do Menu
 local player = game.Players.LocalPlayer
 local mouse = player:GetMouse()
 local gui = Instance.new("ScreenGui")
@@ -20,6 +19,8 @@ mainFrame.Position = UDim2.new(0.5, -100, 0.5, -125)
 mainFrame.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
 mainFrame.BorderSizePixel = 1
 mainFrame.BorderColor3 = Color3.fromRGB(0, 0, 0)
+mainFrame.Active = true
+mainFrame.Draggable = true
 
 -- Função para criar botões
 local function createButton(name, position, callback)
@@ -45,8 +46,11 @@ gravityButton = createButton("Toggle Gravity", UDim2.new(0, 5, 0, 5), function()
         if humanoid.PlatformStand then
             humanoid.PlatformStand = false
             humanoid:ChangeState(Enum.HumanoidStateType.GettingUp)
+            humanoid.Gravity = 196.2 -- Normal gravity
         else
             humanoid.PlatformStand = true
+            humanoid:ChangeState(Enum.HumanoidStateType.GettingUp)
+            humanoid.Gravity = 0 -- Zero gravity
         end
     end
 end)
