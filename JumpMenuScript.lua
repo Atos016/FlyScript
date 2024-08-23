@@ -56,16 +56,6 @@ tab2.Font = Enum.Font.SourceSansBold
 tab2.TextScaled = true
 tab2.Parent = tabContainer
 
-local tab3 = Instance.new("TextButton")
-tab3.Size = UDim2.new(1, 0, 0.2, 0)
-tab3.Position = UDim2.new(0, 0, 0, 0)
-tab3.Text = "Delete Tool"
-tab3.TextColor3 = Color3.fromRGB(255, 255, 255)
-tab3.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
-tab3.Font = Enum.Font.SourceSansBold
-tab3.TextScaled = true
-tab3.Parent = tabContainer
-
 local contentContainer = Instance.new("Frame")
 contentContainer.Size = UDim2.new(1, 0, 0.6, 0)
 contentContainer.Position = UDim2.new(0, 0, 0.2, 0)
@@ -91,16 +81,6 @@ gravityButton.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
 gravityButton.Font = Enum.Font.SourceSansBold
 gravityButton.TextScaled = true
 gravityButton.Parent = contentContainer
-
-local deleteButton = Instance.new("TextButton")
-deleteButton.Size = UDim2.new(0.8, 0, 0.6, 0)
-deleteButton.Position = UDim2.new(0.1, 0, 0.2, 0)
-deleteButton.Text = "Equip Delete Tool"
-deleteButton.TextColor3 = Color3.fromRGB(255, 255, 255)
-deleteButton.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
-deleteButton.Font = Enum.Font.SourceSansBold
-deleteButton.TextScaled = true
-deleteButton.Parent = contentContainer
 
 -- Lógica para alternar entre boost e pulo normal
 boostButton.MouseButton1Click:Connect(function()
@@ -138,24 +118,6 @@ gravityButton.MouseButton1Click:Connect(function()
     end
 end)
 
--- Lógica para equipar ferramenta de deletar partes
-local function equipDeleteTool()
-    local tool = Instance.new("Tool")
-    tool.Name = "DeleteTool"
-    tool.RequiresHandle = false
-    tool.Parent = player.Backpack
-
-    tool.Activated:Connect(function()
-        local mouse = player:GetMouse()
-        local target = mouse.Target
-        if target and target:IsA("BasePart") then
-            target:Destroy()
-        end
-    end)
-end
-
-deleteButton.MouseButton1Click:Connect(equipDeleteTool)
-
 -- Lógica para minimizar e maximizar
 minimizeButton.MouseButton1Click:Connect(function()
     if contentContainer.Visible then
@@ -176,21 +138,12 @@ tab1.MouseButton1Click:Connect(function()
     contentContainer.Visible = true
     boostButton.Visible = true
     gravityButton.Visible = false
-    deleteButton.Visible = false
 end)
 
 tab2.MouseButton1Click:Connect(function()
     contentContainer.Visible = true
     boostButton.Visible = false
     gravityButton.Visible = true
-    deleteButton.Visible = false
-end)
-
-tab3.MouseButton1Click:Connect(function()
-    contentContainer.Visible = true
-    boostButton.Visible = false
-    gravityButton.Visible = false
-    deleteButton.Visible = true
 end)
 
 -- Adicionar controle de movimento personalizado para gravidade 0
@@ -205,6 +158,31 @@ game:GetService("RunService").RenderStepped:Connect(function()
                 (game:GetService("UserInputService"):IsKeyDown(Enum.KeyCode.W) and 1 or 0) - (game:GetService("UserInputService"):IsKeyDown(Enum.KeyCode.S) and 1 or 0)
             ).unit * moveSpeed
             bodyVelocity.Velocity = moveVector
+        end
+    end
+end)
+
+-- Adicionar ferramenta para expulsar jogadores
+local tool = Instance.new("Tool")
+tool.Name = "BanHammer"
+tool.RequiresHandle = true
+tool.Parent = player.Backpack
+
+local handle = Instance.new("Part")
+handle.Size = Vector3.new(1, 1, 1)
+handle.Name = "Handle"
+handle.Parent = tool
+
+tool.Activated:Connect(function()
+    local mouse = player:GetMouse()
+    local target = mouse.Target
+
+    if target and target:IsA("Model") and target:FindFirstChild("Humanoid") then
+        local targetPlayer = game.Players:GetPlayerFromCharacter(target)
+
+        if targetPlayer then
+            -- Expulsar o jogador
+            targetPlayer:Kick("Você foi expulso pelo administrador.")
         end
     end
 end)
