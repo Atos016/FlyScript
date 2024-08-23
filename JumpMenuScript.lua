@@ -6,6 +6,7 @@ local originalJumpPower = humanoid.JumpPower
 local originalGravity = workspace.Gravity
 local isBoosted = false
 local isGravityZero = false
+local moveSpeed = 50  -- Velocidade de movimento para gravidade 0
 
 -- Criar GUI principal
 local screenGui = Instance.new("ScreenGui")
@@ -100,10 +101,20 @@ gravityButton.MouseButton1Click:Connect(function()
         workspace.Gravity = 0
         gravityButton.Text = "Set Gravity to 196.2"  -- Valor padrão de gravidade
         isGravityZero = true
+        -- Adicionar força personalizada para movimentação
+        local bodyVelocity = Instance.new("BodyVelocity")
+        bodyVelocity.Velocity = Vector3.new(0, 0, 0)  -- Inicialmente sem movimento
+        bodyVelocity.MaxForce = Vector3.new(4000, 4000, 4000)  -- Força máxima para mover o personagem
+        bodyVelocity.Parent = character:WaitForChild("HumanoidRootPart")
     else
         workspace.Gravity = originalGravity
         gravityButton.Text = "Set Gravity to 0"
         isGravityZero = false
+        -- Remover força personalizada
+        local bodyVelocity = character:FindFirstChildOfClass("BodyVelocity")
+        if bodyVelocity then
+            bodyVelocity:Destroy()
+        end
     end
 end)
 
@@ -135,3 +146,18 @@ tab2.MouseButton1Click:Connect(function()
     gravityButton.Visible = true
 end)
 
+-- Adicionar controle de movimento personalizado para gravidade 0
+game:GetService("RunService").RenderStepped:Connect(function()
+    if isGravityZero then
+        local bodyVelocity = character:FindFirstChildOfClass("BodyVelocity")
+        if bodyVelocity then
+            -- Movimento básico com as teclas WASD
+            local moveVector = Vector3.new(
+                (game:GetService("UserInputService"):IsKeyDown(Enum.KeyCode.D) and 1 or 0) - (game:GetService("UserInputService"):IsKeyDown(Enum.KeyCode.A) and 1 or 0),
+                0,
+                (game:GetService("UserInputService"):IsKeyDown(Enum.KeyCode.W) and 1 or 0) - (game:GetService("UserInputService"):IsKeyDown(Enum.KeyCode.S) and 1 or 0)
+            ).unit * moveSpeed
+            bodyVelocity.Velocity = moveVector
+        end
+    end
+end)
