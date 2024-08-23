@@ -16,28 +16,30 @@ gui.Name = "CustomMenu"
 gui.ResetOnSpawn = false
 
 mainFrame.Parent = gui
-mainFrame.Size = UDim2.new(0, 200, 0, 300)
-mainFrame.Position = UDim2.new(0.5, -100, 0.5, -150)
+mainFrame.Size = UDim2.new(0, 200, 0, 400) -- Aumentando o tamanho para acomodar todos os botões
+mainFrame.Position = UDim2.new(0.5, -100, 0.5, -200)
 mainFrame.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
-mainFrame.BorderSizePixel = 0
+mainFrame.BorderSizePixel = 1
+mainFrame.BorderColor3 = Color3.fromRGB(0, 0, 0)
 
--- Configuração dos Botões
+-- Função para criar botões
 local function createButton(name, position, callback)
     local button = Instance.new("TextButton")
     button.Parent = mainFrame
-    button.Size = UDim2.new(1, 0, 0, 50)
+    button.Size = UDim2.new(1, -10, 0, 50)
     button.Position = position
     button.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
     button.BorderSizePixel = 0
     button.TextColor3 = Color3.fromRGB(255, 255, 255)
     button.Text = name
     button.TextSize = 18
+    button.AutoButtonColor = false
     button.MouseButton1Click:Connect(callback)
     return button
 end
 
--- Funções dos Botões
-gravityButton.MouseButton1Click:Connect(function()
+-- Adicionando os botões
+gravityButton = createButton("Toggle Gravity", UDim2.new(0, 5, 0, 5), function()
     local char = player.Character
     if char and char:FindFirstChild("Humanoid") then
         local humanoid = char.Humanoid
@@ -50,7 +52,7 @@ gravityButton.MouseButton1Click:Connect(function()
     end
 end)
 
-jumpButton.MouseButton1Click:Connect(function()
+jumpButton = createButton("Toggle Jump Power", UDim2.new(0, 5, 0, 60), function()
     local char = player.Character
     if char and char:FindFirstChild("Humanoid") then
         local humanoid = char.Humanoid
@@ -58,7 +60,7 @@ jumpButton.MouseButton1Click:Connect(function()
     end
 end)
 
-deleteButton.MouseButton1Click:Connect(function()
+deleteButton = createButton("Delete Tool", UDim2.new(0, 5, 0, 115), function()
     local tool = Instance.new("Tool")
     tool.Name = "DeleteTool"
     tool.RequiresHandle = false
@@ -72,11 +74,10 @@ deleteButton.MouseButton1Click:Connect(function()
     end)
 end)
 
-banButton.MouseButton1Click:Connect(function()
-    local playerName = player.Name
-    local targetPlayerName = game.Players:FindFirstChild(playerName)
-    if targetPlayerName then
-        targetPlayerName:Kick("Você foi banido!")
+banButton = createButton("Ban Player", UDim2.new(0, 5, 0, 170), function()
+    local targetPlayer = game.Players:FindFirstChild(player.Name)
+    if targetPlayer then
+        targetPlayer:Kick("Você foi banido!")
     end
 end)
 
