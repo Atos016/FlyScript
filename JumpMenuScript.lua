@@ -8,7 +8,6 @@ local jumpButton = Instance.new("TextButton")
 local deleteButton = Instance.new("TextButton")
 local banButton = Instance.new("TextButton")
 local deleteTool = Instance.new("Tool")
-local toolsFrame = Instance.new("Frame")
 
 -- Configuração do GUI
 gui.Parent = player.PlayerGui
@@ -16,8 +15,8 @@ gui.Name = "CustomMenu"
 gui.ResetOnSpawn = false
 
 mainFrame.Parent = gui
-mainFrame.Size = UDim2.new(0, 200, 0, 400) -- Aumentando o tamanho para acomodar todos os botões
-mainFrame.Position = UDim2.new(0.5, -100, 0.5, -200)
+mainFrame.Size = UDim2.new(0, 200, 0, 250)
+mainFrame.Position = UDim2.new(0.5, -100, 0.5, -125)
 mainFrame.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
 mainFrame.BorderSizePixel = 1
 mainFrame.BorderColor3 = Color3.fromRGB(0, 0, 0)
@@ -88,34 +87,5 @@ deleteTool.Activated:Connect(function()
     local target = mouse.Target
     if target and target:IsA("BasePart") then
         target:Destroy()
-    end
-end)
-
--- Movendo o Menu
-local dragging = false
-local dragStart
-local startPos
-
-local function update(input)
-    local delta = input.Position - dragStart
-    mainFrame.Position = UDim2.new(startPos.X.Scale, startPos.X.Offset + delta.X, startPos.Y.Scale, startPos.Y.Offset + delta.Y)
-end
-
-mainFrame.InputBegan:Connect(function(input)
-    if input.UserInputType == Enum.UserInputType.MouseButton1 then
-        dragging = true
-        dragStart = input.Position
-        startPos = mainFrame.Position
-        input.Changed:Connect(function()
-            if input.UserInputState == Enum.UserInputState.End then
-                dragging = false
-            end
-        end)
-    end
-end)
-
-mainFrame.InputChanged:Connect(function(input)
-    if dragging and input.UserInputType == Enum.UserInputType.MouseMovement then
-        update(input)
     end
 end)
